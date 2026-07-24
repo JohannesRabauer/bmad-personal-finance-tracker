@@ -1,60 +1,89 @@
-# finance-tracker
+# Personal Finance Tracker
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+> A demo project built **live** using the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD) — an agentic, spec-driven development workflow — together with **Brian Madison** and **Johannes Rabauer**.
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+[![Watch the live build on YouTube](https://img.youtube.com/vi/Gki9fAlefyw/maxresdefault.jpg)](https://youtube.com/live/Gki9fAlefyw)
 
-## Running the application in dev mode
+▶️ **Watch the full session:** [Building this app live with the BMAD Method](https://youtube.com/live/Gki9fAlefyw)
 
-You can run your application in dev mode that enables live coding using:
+---
 
-```shell script
+## About this project
+
+This repository is a small **Personal Finance Tracker** created as a demonstration of the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD) — writing a machine-readable **spec** first, then letting agents scaffold, implement, review, and verify the code against that spec.
+
+It is intentionally **demo-grade**: the goal is to show the method and produce a clean, runnable vertical slice — not to be a production-hardened finance app.
+
+## What it does
+
+A user logs in and tracks their own income and expenses:
+
+- 🔐 **Login** — demo-grade form login with a few hard-coded users (no sign-up)
+- ➕ **Log a transaction** — amount (in EUR €), income/expense, date, and a category
+- 📋 **See your history** — a list of your own transactions
+- 👤 **Per-user isolation** — every user sees only their own data; queries are scoped to the logged-in owner
+- 🏷️ **Fixed categories** — a predefined category list (Groceries, Rent, Salary, …)
+
+Data is stored in a local **H2 file database**, so it survives restarts with zero external setup.
+
+## Tech stack
+
+| Concern         | Choice                                             |
+| --------------- | -------------------------------------------------- |
+| Framework       | [Quarkus](https://quarkus.io/)                     |
+| Templating / UI | [Qute](https://quarkus.io/guides/qute) (server-rendered) |
+| Persistence     | Hibernate ORM with Panache + **H2** (file-based)   |
+| Auth            | Quarkus form authentication + embedded users       |
+| Language        | Java 21                                            |
+| Tests           | JUnit 5 + REST Assured (11 tests)                  |
+
+## Running it
+
+Dev mode with live reload:
+
+```shell
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+Then open <http://localhost:8080/transactions> — you'll be redirected to the login page.
 
-## Packaging and running the application
+**Demo users** (username / password): `alice` / `alice-pw`, `bob` / `bob-pw`, `carol` / `carol-pw`.
 
-The application can be packaged using:
+> **Note:** Requires JDK 21+.
 
-```shell script
+Run the tests:
+
+```shell
+./mvnw test
+```
+
+Package and run as a jar:
+
+```shell
 ./mvnw package
+java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+## How it was built (the BMAD Method)
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Rather than jumping straight to code, the work flowed through the BMAD spec-driven workflow:
 
-If you want to build an _über-jar_, execute the following command:
+1. **Spec** — the desired behavior was distilled into a machine-readable spec.
+2. **Plan** — the spec was scoped down to a single foundational vertical slice.
+3. **Implement** — the app was scaffolded and hand-written to satisfy the spec.
+4. **Review** — adversarial, edge-case, and verification-gap review passes hardened it.
+5. **Verify** — the build and 11 automated tests confirm the behavior.
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
+The governing spec and deferred work live under [`_bmad-output/`](./_bmad-output/implementation-artifacts/).
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Not built yet (deferred)
 
-## Creating a native executable
+Kept out of this first slice on purpose — see [`deferred-work.md`](./_bmad-output/implementation-artifacts/deferred-work.md):
 
-You can create a native executable using:
+- Filtering / searching transactions
+- Dashboard and spending charts
+- Production-grade auth (CSRF, real password hashing, sign-up)
 
-```shell script
-./mvnw package -Dnative
-```
+---
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/finance-tracker-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Related Guides
-
-- REST Qute ([guide](https://quarkus.io/guides/qute-reference#rest_integration)): Qute integration for Quarkus REST. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
-- Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplified JPA/Hibernate data access layer with active record and repository patterns
-- JDBC Driver - H2 ([guide](https://quarkus.io/guides/datasource)): Connect to the H2 database via JDBC
+*Built with the [BMAD Method](https://github.com/bmad-code-org/BMAD-METHOD) · [Watch the live session](https://youtube.com/live/Gki9fAlefyw)*

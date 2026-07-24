@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Transactions</title>
+    <style>
+        :root { --in: #1a7f37; --out: #b91c1c; --bg: #f6f8fa; --line: #d0d7de; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+               background: var(--bg); color: #1f2328; }
+        header { display: flex; justify-content: space-between; align-items: center;
+                 padding: 12px 16px; background: #fff; border-bottom: 1px solid var(--line); }
+        header h1 { font-size: 1.1rem; margin: 0; }
+        header .user { font-size: .85rem; color: #57606a; }
+        main { max-width: 640px; margin: 0 auto; padding: 16px; }
+        .card { background: #fff; border: 1px solid var(--line); border-radius: 10px;
+                padding: 16px; margin-bottom: 16px; }
+        label { display: block; font-size: .8rem; color: #57606a; margin: 8px 0 4px; }
+        input, select, button { width: 100%; padding: 10px; font-size: 1rem;
+                border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+        .row { display: flex; gap: 10px; }
+        .row > div { flex: 1; }
+        button { margin-top: 14px; background: #0969da; color: #fff; border: none; font-weight: 600; }
+        .error { background: #ffebe9; border: 1px solid #ff818266; color: var(--out);
+                 padding: 8px 10px; border-radius: 8px; margin-bottom: 10px; font-size: .9rem; }
+        ul.tx { list-style: none; margin: 0; padding: 0; }
+        ul.tx li { display: flex; justify-content: space-between; align-items: center;
+                   padding: 10px 0; border-bottom: 1px solid var(--line); }
+        ul.tx li:last-child { border-bottom: none; }
+        .meta { font-size: .8rem; color: #57606a; }
+        .amt.IN { color: var(--in); }
+        .amt.OUT { color: var(--out); }
+        .amt { font-variant-numeric: tabular-nums; font-weight: 600; }
+        .empty { color: #57606a; text-align: center; padding: 20px 0; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Personal Finance Tracker</h1>
+    <span class="user">{user} &middot; <a href="/logout">log out</a></span>
+</header>
+<main>
+    <div class="card">
+        <h2 style="margin-top:0;font-size:1rem;">Add a transaction</h2>
+        {#if error}<div class="error">{error}</div>{/if}
+        <form method="post" action="/transactions">
+            <div class="row">
+                <div>
+                    <label for="type">Type</label>
+                    <select id="type" name="type">
+                        {#for type in types}
+                        <option value="{type}">{type.label}</option>
+                        {/for}
+                    </select>
+                </div>
+                <div>
+                    <label for="amount">Amount (&euro;)</label>
+                    <input id="amount" name="amount" type="number" step="0.01" min="0.01"
+                           inputmode="decimal" placeholder="0.00" required>
+                </div>
+            </div>
+            <div class="row">
+                <div>
+                    <label for="date">Date</label>
+                    <input id="date" name="date" type="date" value="{today}">
+                </div>
+                <div>
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                        {#for category in categories}
+                        <option value="{category}">{category.label}</option>
+                        {/for}
+                    </select>
+                </div>
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2 style="margin-top:0;font-size:1rem;">Your history</h2>
+        {#if transactions.isEmpty()}
+        <p class="empty">No transactions yet. Add your first one above.</p>
+        {#else}
+        <ul class="tx">
+            {#for t in transactions}
+            <li>
+                <div>
+                    <div>{t.category.label}</div>
+                    <div class="meta">{t.type.label} &middot; {t.date}</div>
+                </div>
+                <div class="amt {t.type}">
+                    {#if t.type.name == 'OUT'}&minus;{/if}&euro; {t.amount}
+                </div>
+            </li>
+            {/for}
+        </ul>
+        {/if}
+    </div>
+</main>
+</body>
+</html>

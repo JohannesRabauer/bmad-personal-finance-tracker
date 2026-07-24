@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+               font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+               background: #f6f8fa; color: #1f2328; }
+        .card { background: #fff; border: 1px solid #d0d7de; border-radius: 10px;
+                padding: 24px; width: 320px; }
+        h1 { font-size: 1.1rem; margin: 0 0 4px; }
+        p.sub { margin: 0 0 16px; color: #57606a; font-size: .85rem; }
+        label { display: block; font-size: .8rem; color: #57606a; margin: 10px 0 4px; }
+        input, button { width: 100%; padding: 10px; font-size: 1rem;
+                border: 1px solid #d0d7de; border-radius: 8px; }
+        button { margin-top: 16px; background: #0969da; color: #fff; border: none; font-weight: 600; }
+        .error { background: #ffebe9; border: 1px solid #ff818266; color: #b91c1c;
+                 padding: 8px 10px; border-radius: 8px; margin-bottom: 10px; font-size: .9rem; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Personal Finance Tracker</h1>
+    <p class="sub">Sign in to see your transactions.</p>
+    {#if error}<div class="error">Invalid username or password.</div>{/if}
+    <form method="post" action="/j_security_check">
+        <label for="j_username">Username</label>
+        <input id="j_username" name="j_username" type="text" autocomplete="username" required autofocus>
+        <label for="j_password">Password</label>
+        <input id="j_password" name="j_password" type="password" autocomplete="current-password" required>
+        <button type="submit">Log in</button>
+    </form>
+</div>
+</body>
+</html>
